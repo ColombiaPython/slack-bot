@@ -17,23 +17,18 @@ Este es el repositorio de un Bot que obtiene información de un equipo en Slack 
 
 </div>
 
-<!-- # 🔀 Flujo de trabajo
+# 🔀 Flujo de trabajo
 
 Hay 2 ramas de git, `develop` y `production`.
 
 ## ⤴️ Develop
 
-Es la rama por defecto y se despliega a través de gh-pages con Lektor a
-https://colombiapython.github.io/sitio-web-desarrollo/
-(en http://develop.python.org.co)
+Es la rama por defecto. Se hace Pull Request desde otra rama referente al issue o cambio que se quiera agregar, e.g. `issue-99` o `add-function`.
 
 ## ⤴️ Production
 
 Después de que se han ejecutado las pruebas de calidad (QA), los cambios
-realizados en la rama `develop` se unen con la rama `production` y son
-desplegados a través de gh-pages con Lektor a 
-https://colombiapython.github.io/sitio-web-produccion/
-(pronto en http://www.python.org.co) -->
+realizados en la rama `develop` se unen con la rama `production`.
 
 # 🛠 Desarrollo local
 
