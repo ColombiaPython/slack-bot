@@ -12,6 +12,7 @@ slack_signing_secret = config['signing_secret']
 slack_events_adapter = SlackEventAdapter(slack_signing_secret, "/slack/events")
 
 # Create a SlackClient for your bot to use for Web API requests
+slack_bot_name = config['name']
 slack_bot_token = config['token']
 slack_client = SlackClient(slack_bot_token)
 
@@ -27,6 +28,25 @@ def user_added(event_data):
 
     if direct_channel["ok"]:
         slack_client.api_call("chat.postMessage", channel=direct_channel["channel"]["id"], text=texts['welcome_private'])
+
+
+@slack_events_adapter.on("message")
+def handle_message(event_data):
+    message = event_data["event"]
+    print(message)
+
+    # Private Message
+    if message["channel_type"] == "im":
+        if message.get("subtype") is None and "hola"  in message.get('text'):
+            channel = message["channel"]
+            message = "Hola <@%s>! :tada:" % message["user"]
+            slack_client.api_call("chat.postMessage", channel=channel, text=message)
+    # else:
+    # Public Message
+        # if message.get("subtype") is None and message['text'] == ("hola @<" + message['user'] + ">"):
+        #     channel = message["channel"]
+        #     message = "Hello <@%s>! :tada:" % message["user"]
+        #     slack_client.api_call("chat.postMessage", channel=channel, text=message)
 
 
 # Error events
