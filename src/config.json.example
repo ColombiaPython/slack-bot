@@ -2,5 +2,8 @@
   "config": {
     "token": "",
     "signing_secret": ""
+  },
+  "text": {
+    "welcome_private": ""
   }
 }
