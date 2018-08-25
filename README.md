@@ -73,11 +73,65 @@ $ pip install -r requirements.txt
 $ conda install --yes --file requirements.txt
 ```
 
-<!-- ## ✅ Corre el servidor local
+### ✅ Crear y Configurar Bot
+
+#### 🔧 Crear Slack app
+
+Ingresar a `https://api.slack.com/apps/` y crear aplicación.
+
+![Crear App](./assets/documentation/create-app.png)
+
+#### 🤖 Agregar usuario Bot a Slack app
+
+![Crear Bot](./assets/documentation/create-bot.png)
+
+#### 🔩 Instalar App en grupo de Slack
+
+Visitar la página de instalación de la App creada y seleccionar __Install App to Team__.
+
+![Instalación App](./assets/documentation/install-app.png)
+
+Autorizar la instalación.
+
+![Autorizar App](./assets/documentation/authorize-app.png)
+
+#### ⚙ Crear archivo de configuración
+
+Renombrar el archivo `/src/config.json.example` como `/src/config.json`
+
+#### ⚙ Guardar credenciales
+
+Una vez se haya autorizado la aplicación, se mostrará la sección de Tokens de Autorización.
+
+![Autorizar Token](./assets/documentation/auth-token.png)
+
+Copiar de __Bot User OAuth Access Token__ y agregarlo al atributo `token` en `config.json`
 
 ```
-$ lektor server
-``` -->
+"config": {
+    "name": "...",
+    "token": "xxxXXxxXXxXXxXXXXxxxX.xXxxxXxxxx",
+    ...
+  },
+  ...
+```
+
+En la página __Basic Information__ de la App:
+
+![Singin Token](./assets/documentation/signin-token.png)
+
+Agregar información __Signing Secret__ al archivo `config.json`.
+
+```
+"config": {
+    "name": "...",
+    "token": "xxxXXxxXXxXXxXXXXxxxX.xXxxxXxxxx",
+    "signin_secret": "xxxxxxxxXxxXxxXxXXXxxXxxx",
+    ...
+  },
+  ...
+```
+
 
 <!-- ## ⁉️ Problemas comunes
 
@@ -98,21 +152,60 @@ export LANG=en_us.UTF-8
 $ lektor plugins reinstall
 ``` -->
 
-<!-- # 🚀 Despliegue
-
-Gracias a _Lektor Bot_ (Plugin de lektor conectado a Github), podemos desplegar nuestra web estática en diferentes repositorios (en la rama seleccionada en configuración - `gh-pages` en nuestro caso).
-
-La configuración de dichos repositorios se encuentra en `python-colombia.lektorproject`
+# 🚀 Despliegue
 
 ## ✔️ Desarrollo
 
+### Ejecutar Bot
+
 ```
-$ lektor deploy
+$ cd src/
+$ python bot.py
 ```
 
-Se desplegará el contenido de la rama `develop` en `develop.python.org.co`
+### 🚧 Configuración Tunel
 
-## ✔️✔️ Producción
+Al momento de Slack contactar el servidor local, se necesitará ejecutar un tunel. Se recomienda `ngrok` o `localtunnel`.
+
+![ngrok](./assets/documentation/ngrok.png)
+
+💡 Slack necesita que las peticiones de eventos se hagan sobre SSL, entonces necesitamos usar HTTPS URL, para esto nos apoyamos en las siguientes opciones.
+
+#### Ngrok
+
+> Instrucciones de instalación y configuración de [ngrok](https://ngrok.com/)
+
+Ejecutar ngrok y copiar HTTPS URL
+
+```
+$ ngrok http 3000
+ngrok by @inconshreveable (Ctrl+C to quit)
+
+Session status                      online
+Version                             2.1.18
+Region                  United States (us)
+Web Interface        http://127.0.0.1:4040
+
+Forwarding http://h7465j.ngrok.io -> localhost:9292
+Forwarding https://h7465j.ngrok.io -> localhost:9292
+```
+
+#### serveo.net (Opción recomendada)
+
+```
+$ ssh -R <subdominio>:80:localhost:3000 serveo.net 
+```
+
+### Suscribir la app a Eventos
+
+Agregar la URL de peticiones (`tunnel URL + /slack/events`). Guardar y activar __Enable Events__.
+
+_PENDIENTE: Lista de Eventos del Bot a activar._
+
+![subscribe](./assets/documentation/subscribe.png)
+![enable events](./assets/documentation/enable-events.png)
+
+<!-- ## ✔️✔️ Producción
 
 ```
 $ lektor deploy production
@@ -140,3 +233,5 @@ ___
 [license]: https://github.com/ColombiaPython/slack-bot/blob/master/LICENSE
 [prs-badge]: https://img.shields.io/badge/Issues-welcome-brightgreen.svg?style=flat-square
 [prs]: https://github.com/ColombiaPython/slack-bot/issues/new
+
+> Basado en [Slack Events API Python](https://github.com/slackapi/python-slack-events-api/blob/master/example/README.rst)
